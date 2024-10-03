@@ -1,0 +1,49 @@
+services:
+  meli-apc:
+    build: .
+    container_name: meli-apc
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - meli-apc-network
+    environment:
+      APP_BASE_URL: ${APP_BASE_URL}
+      MELI_SITE_ID: ${MELI_SITE_ID}
+      MELI_ACCESS_TOKEN: ${MELI_ACCESS_TOKEN}
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: meliapc
+      POSTGRES_PASSWORD: meliapc
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - meli-apc-network
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:50
+    networks:
+      - meli-apc-network
+    restart: unless-stopped
+
+networks:
+  meli-apc-network:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

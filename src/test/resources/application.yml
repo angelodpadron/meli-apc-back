@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: test
+
+# TODO: configure rest client for tests
+
+app:
+  meli:
+    base-url:
+    access-token:
