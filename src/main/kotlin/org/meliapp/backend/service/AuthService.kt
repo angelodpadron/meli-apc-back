@@ -20,20 +20,29 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val authenticationManager: AuthenticationManager,
 ) {
-    fun register(registerRequest: AuthRequestBody) {
+    fun register(registerRequest: AuthRequestBody): String {
         checkIfUserExists(registerRequest.email)
 
-        val user = User()
-        user.email = registerRequest.email
-        user.password = passwordEncoder.encode(registerRequest.password)
-
-        val role = roleRepository
-            .findRoleByName(RoleName.ROLE_USER)
-            .orElseThrow { RuntimeException("Role not found: ${RoleName.ROLE_USER.name}") }
-
-        user.roles = setOf(role)
+        val user = User().apply {
+            email = registerRequest.email
+            password = passwordEncoder.encode(registerRequest.password)
+            roles = setOf(
+                roleRepository
+                    .findRoleByName(RoleName.ROLE_USER)
+                    .orElseThrow { RuntimeException("Role not found: ${RoleName.ROLE_USER.name}") }
+            )
+        }
 
         userRepository.save(user)
+        val authentication = authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(registerRequest.email, registerRequest.password)
+        )
+
+        SecurityContextHolder.getContext().authentication = authentication
+
+        return JWTHelper.generateToken(user.email)
+
+
     }
 
     fun login(loginRequest: AuthRequestBody): String {
