@@ -19,11 +19,22 @@ class AuthService(
     private val roleRepository: RoleRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authenticationManager: AuthenticationManager,
+    private val jwtHelper: JWTHelper
 ) {
     fun register(registerRequest: AuthRequestBody): String {
         checkIfUserExists(registerRequest.email)
 
-        val user = User().apply {
+        val user = generateUser(registerRequest)
+
+        userRepository.save(user)
+
+        authenticate(registerRequest)
+
+        return jwtHelper.generateToken(user.email)
+    }
+
+    fun generateUser(registerRequest: AuthRequestBody): User {
+        return User().apply {
             email = registerRequest.email
             password = passwordEncoder.encode(registerRequest.password)
             roles = setOf(
@@ -32,37 +43,27 @@ class AuthService(
                     .orElseThrow { RuntimeException("Role not found: ${RoleName.ROLE_USER.name}") }
             )
         }
-
-        userRepository.save(user)
-        val authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(registerRequest.email, registerRequest.password)
-        )
-
-        SecurityContextHolder.getContext().authentication = authentication
-
-        return JWTHelper.generateToken(user.email)
-
-
     }
 
-    fun login(loginRequest: AuthRequestBody): String {
-        val authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(
-                loginRequest.email,
-                loginRequest.password
-            )
-        )
-        SecurityContextHolder.getContext().authentication = authentication
+    fun login(request: AuthRequestBody): String {
+        authenticate(request)
 
         return userRepository
-            .findByEmail(loginRequest.email)
-            .map { user -> JWTHelper.generateToken(user.email) }
+            .findByEmail(request.email)
+            .map { user -> jwtHelper.generateToken(user.email) }
             .get()
     }
 
-    private fun checkIfUserExists(email: String) {
-        val user = userRepository.findByEmail(email)
-        if (user.isPresent) throw UserAlreadyRegisteredException(email)
+    fun authenticate(request: AuthRequestBody) {
+        val authentication = authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(request.email, request.password)
+        )
+
+        SecurityContextHolder.getContext().authentication = authentication
+    }
+
+    fun checkIfUserExists(email: String) {
+        if (userRepository.existsByEmail(email)) throw UserAlreadyRegisteredException(email)
     }
 
 }

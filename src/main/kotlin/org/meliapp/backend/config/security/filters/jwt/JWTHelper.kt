@@ -4,17 +4,18 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Component
 import java.security.SecureRandom
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+@Component
 class JWTHelper {
 
-    companion object {
 
         private val SECRET_KEY = Keys.hmacShaKeyFor(ByteArray(32).also { SecureRandom().nextBytes(it) })
-        private const val MINUTES = 60
+        private val MINUTES = 60
 
         fun generateToken(email: String): String {
 
@@ -51,6 +52,5 @@ class JWTHelper {
 
 
 
-    }
 
 }
