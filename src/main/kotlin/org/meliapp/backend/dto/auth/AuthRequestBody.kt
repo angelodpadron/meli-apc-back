@@ -1,4 +1,4 @@
-package org.meliapp.backend.dto.apc.auth
+package org.meliapp.backend.dto.auth
 
 import com.fasterxml.jackson.annotation.JsonCreator
 

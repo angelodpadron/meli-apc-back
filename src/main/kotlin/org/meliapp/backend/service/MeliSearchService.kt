@@ -1,6 +1,8 @@
 package org.meliapp.backend.service
 
 import org.meliapp.backend.dto.meli.MeliSearchResponse
+import org.meliapp.backend.dto.product.ProductResponse
+import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -30,6 +32,18 @@ class MeliSearchService(
 
     }
 
+    fun findById(id: String): ProductResponse {
+        val queryString = "/items/${id}"
+
+        return restClient
+            .get()
+            .uri(queryString)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus({ it.is4xxClientError }) { _, _ -> throw ProductNotFoundException(id) }
+            .body(object : ParameterizedTypeReference<ProductResponse>() {})!!
+
+    }
 
 
 }
