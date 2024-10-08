@@ -7,7 +7,7 @@ import jakarta.persistence.*
 class Bookmark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    var id: Long = 0
 
     @ManyToOne
     lateinit var product: Product

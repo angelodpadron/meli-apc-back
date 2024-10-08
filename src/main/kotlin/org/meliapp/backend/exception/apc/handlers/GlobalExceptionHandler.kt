@@ -1,7 +1,7 @@
 package org.meliapp.backend.exception.apc.handlers
 import io.jsonwebtoken.JwtException
 import org.meliapp.backend.dto.ApiResponse
-import org.meliapp.backend.exception.apc.BookmarkException
+import org.meliapp.backend.exception.apc.BookmarkNotFoundException
 import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.meliapp.backend.exception.apc.UserAlreadyRegisteredException
 import org.springframework.http.HttpStatus
@@ -18,12 +18,12 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse(null, e.localizedMessage))
     }
 
-    @ExceptionHandler(UserAlreadyRegisteredException::class, BookmarkException::class)
+    @ExceptionHandler(UserAlreadyRegisteredException::class)
     fun handleUserAlreadyRegisteredException(e: UserAlreadyRegisteredException): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse(null, e.localizedMessage))
     }
 
-    @ExceptionHandler(ProductNotFoundException::class)
+    @ExceptionHandler(ProductNotFoundException::class, BookmarkNotFoundException::class)
     fun handleNotFoundException(e: ProductNotFoundException): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse(null, e.localizedMessage))
     }

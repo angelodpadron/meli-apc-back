@@ -3,10 +3,9 @@ package org.meliapp.backend.service
 import jakarta.transaction.Transactional
 import org.meliapp.backend.dto.bookmark.BookmarkRequestBody
 import org.meliapp.backend.dto.bookmark.BookmarkResponse
-import org.meliapp.backend.exception.apc.BookmarkException
+import org.meliapp.backend.exception.apc.BookmarkNotFoundException
 import org.meliapp.backend.model.Bookmark
 import org.meliapp.backend.model.Product
-import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.BookmarkRepository
 import org.meliapp.backend.repository.ProductRepository
 import org.springframework.stereotype.Service
@@ -23,16 +22,8 @@ class BookmarkService(
         val currentUser = authService.getUserAuthenticated()
 
         return bookmarkRepository
-            .findAllByUserId(currentUser.id)
-            .map {
-                BookmarkResponse(
-                    id = it.id,
-                    meliId = it.product.meliId,
-                    userId = currentUser.id,
-                    comment = it.comment,
-                    stars = it.stars
-                )
-            }
+            .findByUserId(currentUser.id)
+            .map { toBookmarkResponse(it) }
     }
 
     @Transactional
@@ -59,16 +50,14 @@ class BookmarkService(
 
         bookmarkRepository.save(bookmark)
 
-        return BookmarkResponse(bookmark.id, request.meliId, currentUser.id, bookmark.stars, bookmark.comment)
+        return toBookmarkResponse(bookmark)
 
     }
 
     @Transactional
     fun editBookmark(bookmarkId: Long, request: BookmarkRequestBody): BookmarkResponse {
         val currentUser = authService.getUserAuthenticated()
-        val bookmark = getBookmark(bookmarkId)
-
-        checkIfCanEdit(bookmark, currentUser)
+        val bookmark = getBookmark(bookmarkId, currentUser.id)
 
         bookmark.apply {
             stars = request.stars
@@ -77,26 +66,29 @@ class BookmarkService(
 
         bookmarkRepository.save(bookmark)
 
-        return BookmarkResponse(bookmark.id, request.meliId, currentUser.id, bookmark.stars, bookmark.comment)
+        return toBookmarkResponse(bookmark)
     }
 
     @Transactional
     fun deleteBookmark(bookmarkId: Long) {
         val currentUser = authService.getUserAuthenticated()
-        val bookmark = getBookmark(bookmarkId)
-
-        checkIfCanEdit(bookmark, currentUser)
+        val bookmark = getBookmark(bookmarkId, currentUser.id)
 
         bookmarkRepository.delete(bookmark)
     }
 
-    private fun checkIfCanEdit(bookmark: Bookmark, currentUser: User) {
-        if (bookmark.user.id != currentUser.id) throw BookmarkException("Cannot edit an unrelated bookmark")
-    }
+    private fun getBookmark(bookmarkId: Long, userId: Long): Bookmark = bookmarkRepository
+        .findByIdAndUserId(bookmarkId, userId)
+        .orElseThrow { BookmarkNotFoundException(bookmarkId) }
 
-    private fun getBookmark(bookmarkId: Long): Bookmark = bookmarkRepository
-        .findById(bookmarkId)
-        .orElseThrow { BookmarkException("No marked product was found with id $bookmarkId") }
+    private fun toBookmarkResponse(bookmark: Bookmark): BookmarkResponse =
+        BookmarkResponse(
+            id = bookmark.id,
+            stars = bookmark.stars,
+            comment = bookmark.comment,
+            meliId = bookmark.product.meliId,
+            userId = bookmark.user.id
+        )
 
 
 }

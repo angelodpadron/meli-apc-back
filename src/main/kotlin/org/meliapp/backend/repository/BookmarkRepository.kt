@@ -9,9 +9,9 @@ import java.util.*
 
 @Repository
 interface BookmarkRepository : JpaRepository<Bookmark, Long> {
-    @Query("SELECT b FROM Bookmark b WHERE b.product.meliId = :meliId")
-    fun findByMeliId(@Param("meliId") meliId: String): Optional<Bookmark>
-
     @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId")
-    fun findAllByUserId(@Param("userId") userId: Long): List<Bookmark>
+    fun findByUserId(@Param("userId") userId: Long): List<Bookmark>
+
+    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND b.id = :bookmarkId")
+    fun findByIdAndUserId(@Param("userId") userId: Long, @Param("bookmarkId") id: Long): Optional<Bookmark>
 }
