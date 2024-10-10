@@ -18,4 +18,5 @@ spring:
 app:
   meli:
     base-url:
+    meli-site-id:
     access-token:
