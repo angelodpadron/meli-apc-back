@@ -12,6 +12,6 @@ interface BookmarkRepository : JpaRepository<Bookmark, Long> {
     @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId")
     fun findByUserId(@Param("userId") userId: Long): List<Bookmark>
 
-    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND b.id = :bookmarkId")
-    fun findByIdAndUserId(@Param("userId") userId: Long, @Param("bookmarkId") id: Long): Optional<Bookmark>
+    @Query("SELECT b FROM Bookmark b WHERE b.id = :bookmarkId AND b.user.id = :userId")
+    fun findByIdAndUserId(@Param("bookmarkId") id: Long, @Param("userId") userId: Long): Optional<Bookmark>
 }

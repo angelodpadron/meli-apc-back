@@ -24,7 +24,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProductNotFoundException::class, BookmarkNotFoundException::class)
-    fun handleNotFoundException(e: ProductNotFoundException): ResponseEntity<ApiResponse<Any>> {
+    fun handleNotFoundException(e: RuntimeException): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse(null, e.localizedMessage))
     }
 

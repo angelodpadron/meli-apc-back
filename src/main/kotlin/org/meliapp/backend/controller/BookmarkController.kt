@@ -1,8 +1,9 @@
 package org.meliapp.backend.controller
 
 import org.meliapp.backend.dto.ApiResponse
+import org.meliapp.backend.dto.bookmark.BookmarkDetails
 import org.meliapp.backend.dto.bookmark.BookmarkRequestBody
-import org.meliapp.backend.dto.bookmark.BookmarkResponse
+import org.meliapp.backend.dto.bookmark.BookmarkSummary
 import org.meliapp.backend.service.BookmarkService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,12 +16,17 @@ class BookmarkController(
 ) {
 
     @GetMapping
-    fun getBookmarks(): ResponseEntity<ApiResponse<List<BookmarkResponse>>> {
+    fun getBookmarks(): ResponseEntity<ApiResponse<List<BookmarkSummary>>> {
         return ResponseEntity.ok(ApiResponse(bookmarkService.getUserBookmarks()))
     }
 
+    @GetMapping("/{bookmarkId}")
+    fun getBookmarkDetails(@PathVariable bookmarkId: Long): ResponseEntity<ApiResponse<BookmarkDetails>> {
+        return ResponseEntity.ok(ApiResponse(bookmarkService.getBookmarkDetails(bookmarkId)))
+    }
+
     @PostMapping
-    fun bookmarkProduct(@RequestBody request: BookmarkRequestBody): ResponseEntity<ApiResponse<BookmarkResponse>> {
+    fun bookmarkProduct(@RequestBody request: BookmarkRequestBody): ResponseEntity<ApiResponse<BookmarkDetails>> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(ApiResponse(bookmarkService.bookmarkProduct(request)))
@@ -30,7 +36,7 @@ class BookmarkController(
     fun editBookmark(
         @PathVariable bookmarkId: Long,
         @RequestBody request: BookmarkRequestBody
-    ): ResponseEntity<ApiResponse<BookmarkResponse>> {
+    ): ResponseEntity<ApiResponse<BookmarkDetails>> {
         return ResponseEntity.ok(ApiResponse(bookmarkService.editBookmark(bookmarkId, request)))
     }
 

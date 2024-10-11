@@ -60,6 +60,8 @@ class BookmarkServiceUnitTest {
 
         whenever(mockUser.id).thenReturn(1L)
         whenever(mockProduct.meliId).thenReturn("meli_id")
+        whenever(mockProduct.title).thenReturn("product_title")
+        whenever(mockProduct.thumbnail).thenReturn("product_thumbnail")
 
         whenever(meliSearchService.findById(bookmarkRequest.meliId)).thenReturn(productResponse)
         whenever(productRepository.findByMeliId(bookmarkRequest.meliId)).thenReturn(Optional.of(mockProduct))
@@ -69,10 +71,9 @@ class BookmarkServiceUnitTest {
         val response = bookmarkService.bookmarkProduct(bookmarkRequest)
 
         // Assert
-        assertEquals(bookmarkRequest.meliId, response.meliId)
+        assertEquals(bookmarkRequest.meliId, response.postId)
         assertEquals(bookmarkRequest.stars, response.stars)
         assertEquals(bookmarkRequest.comment, response.comment)
-        assertEquals(mockUser.id, response.userId)
 
         // Verify
         verify(bookmarkRepository, times(1)).save(any())
@@ -98,6 +99,8 @@ class BookmarkServiceUnitTest {
 
         whenever(mockUser.id).thenReturn(1L)
         whenever(mockProduct.meliId).thenReturn("meli_id")
+        whenever(mockProduct.title).thenReturn("product_title")
+        whenever(mockProduct.thumbnail).thenReturn("product_thumbnail")
 
         whenever(meliSearchService.findById(bookmarkRequest.meliId)).thenReturn(productResponse)
         whenever(productRepository.findByMeliId(bookmarkRequest.meliId)).thenReturn(Optional.empty())
@@ -192,6 +195,8 @@ class BookmarkServiceUnitTest {
         whenever(bookmarkRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.of(bookmark))
         whenever(authService.getUserAuthenticated()).thenReturn(mockUser)
         whenever(mockProduct.meliId).thenReturn("meli_id")
+        whenever(mockProduct.title).thenReturn("product_title")
+        whenever(mockProduct.thumbnail).thenReturn("product_thumbnail")
         whenever(mockUser.id).thenReturn(1L)
 
         // Act
@@ -201,8 +206,7 @@ class BookmarkServiceUnitTest {
         assertEquals(1L, response.id)
         assertEquals("updated comment", response.comment)
         assertEquals(4, response.stars)
-        assertEquals("meli_id", response.meliId)
-        assertEquals(1L, response.userId)
+        assertEquals("meli_id", response.postId)
 
         // Verify
         verify(bookmarkRepository, times(1)).save(bookmark)

@@ -1,8 +1,9 @@
 package org.meliapp.backend.service
 
 import jakarta.transaction.Transactional
+import org.meliapp.backend.dto.bookmark.BookmarkDetails
 import org.meliapp.backend.dto.bookmark.BookmarkRequestBody
-import org.meliapp.backend.dto.bookmark.BookmarkResponse
+import org.meliapp.backend.dto.bookmark.BookmarkSummary
 import org.meliapp.backend.exception.apc.BookmarkNotFoundException
 import org.meliapp.backend.model.Bookmark
 import org.meliapp.backend.model.Product
@@ -18,16 +19,33 @@ class BookmarkService(
     private val productRepository: ProductRepository,
 ) {
 
-    fun getUserBookmarks(): List<BookmarkResponse> {
+    fun getUserBookmarks(): List<BookmarkSummary> {
         val currentUser = authService.getUserAuthenticated()
 
         return bookmarkRepository
             .findByUserId(currentUser.id)
-            .map { toBookmarkResponse(it) }
+            .map { toBookmarkSummary(it) }
+    }
+
+    fun getBookmarkDetails(bookmarkId: Long): BookmarkDetails {
+        val currentUser = authService.getUserAuthenticated()
+        return toBookmarkDetails(getBookmark(bookmarkId, currentUser.id))
+    }
+
+    private fun toBookmarkDetails(bookmark: Bookmark): BookmarkDetails {
+        return BookmarkDetails(
+            id = bookmark.id,
+            productTitle = bookmark.product.title,
+            postId = bookmark.product.meliId,
+            thumbnail = bookmark.product.thumbnail,
+            stars = bookmark.stars,
+            comment = bookmark.comment,
+
+            )
     }
 
     @Transactional
-    fun bookmarkProduct(request: BookmarkRequestBody): BookmarkResponse {
+    fun bookmarkProduct(request: BookmarkRequestBody): BookmarkDetails {
         val currentUser = authService.getUserAuthenticated()
         val productResponse = meliSearchService.findById(request.meliId)
 
@@ -37,6 +55,7 @@ class BookmarkService(
                 productRepository.save(Product().apply {
                     meliId = productResponse.id
                     title = productResponse.title
+                    thumbnail = productResponse.thumbnail
                     price = productResponse.price
                 })
             }
@@ -50,12 +69,12 @@ class BookmarkService(
 
         bookmarkRepository.save(bookmark)
 
-        return toBookmarkResponse(bookmark)
+        return toBookmarkDetails(bookmark)
 
     }
 
     @Transactional
-    fun editBookmark(bookmarkId: Long, request: BookmarkRequestBody): BookmarkResponse {
+    fun editBookmark(bookmarkId: Long, request: BookmarkRequestBody): BookmarkDetails {
         val currentUser = authService.getUserAuthenticated()
         val bookmark = getBookmark(bookmarkId, currentUser.id)
 
@@ -66,7 +85,7 @@ class BookmarkService(
 
         bookmarkRepository.save(bookmark)
 
-        return toBookmarkResponse(bookmark)
+        return toBookmarkDetails(bookmark)
     }
 
     @Transactional
@@ -81,13 +100,12 @@ class BookmarkService(
         .findByIdAndUserId(bookmarkId, userId)
         .orElseThrow { BookmarkNotFoundException(bookmarkId) }
 
-    private fun toBookmarkResponse(bookmark: Bookmark): BookmarkResponse =
-        BookmarkResponse(
+    private fun toBookmarkSummary(bookmark: Bookmark) =
+        BookmarkSummary(
             id = bookmark.id,
-            stars = bookmark.stars,
-            comment = bookmark.comment,
-            meliId = bookmark.product.meliId,
-            userId = bookmark.user.id
+            productTitle = bookmark.product.title,
+            thumbnail = bookmark.product.thumbnail,
+            stars = bookmark.stars
         )
 
 

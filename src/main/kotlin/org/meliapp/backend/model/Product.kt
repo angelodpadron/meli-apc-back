@@ -11,5 +11,6 @@ class Product {
     @Column(unique = true)
     lateinit var meliId: String
     lateinit var title: String
+    lateinit var thumbnail: String
     lateinit var price: BigDecimal
 }
