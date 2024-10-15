@@ -2,14 +2,10 @@ package org.meliapp.backend.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import org.meliapp.backend.dto.ApiResponse
-import org.meliapp.backend.dto.apc.auth.AuthRequestBody
+import org.meliapp.backend.dto.auth.AuthRequestBody
 import org.meliapp.backend.service.AuthService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")

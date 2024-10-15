@@ -17,5 +17,6 @@ server:
 app:
   base-url: http://localhost:${server.port}
   meli:
-    base-url: https://api.mercadolibre.com/sites/${MELI_SITE_ID}
+    base-url: https://api.mercadolibre.com
+    meli-site-id: ${MELI_SITE_ID}
     access-token: ${MELI_ACCESS_TOKEN}

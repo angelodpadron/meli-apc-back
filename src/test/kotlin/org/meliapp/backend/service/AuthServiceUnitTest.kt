@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.meliapp.backend.config.security.filters.jwt.JWTHelper
-import org.meliapp.backend.dto.apc.auth.AuthRequestBody
+import org.meliapp.backend.dto.auth.AuthRequestBody
 import org.meliapp.backend.model.Role
 import org.meliapp.backend.model.RoleName
 import org.meliapp.backend.model.User

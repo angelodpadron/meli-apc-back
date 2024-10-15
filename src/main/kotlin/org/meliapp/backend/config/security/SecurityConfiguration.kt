@@ -62,7 +62,7 @@ class SecurityConfiguration(
                         "/v3/api-docs"
                     ).permitAll()
                     .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/products/search").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                     .anyRequest().authenticated()
 
             }

@@ -1,7 +1,7 @@
 package org.meliapp.backend.service
 
 import org.meliapp.backend.config.security.filters.jwt.JWTHelper
-import org.meliapp.backend.dto.apc.auth.AuthRequestBody
+import org.meliapp.backend.dto.auth.AuthRequestBody
 import org.meliapp.backend.exception.apc.UserAlreadyRegisteredException
 import org.meliapp.backend.model.RoleName
 import org.meliapp.backend.model.User
@@ -64,6 +64,12 @@ class AuthService(
 
     fun checkIfUserExists(email: String) {
         if (userRepository.existsByEmail(email)) throw UserAlreadyRegisteredException(email)
+    }
+
+    fun getUserAuthenticated(): User {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val email = authentication.name
+        return userRepository.findByEmail(email).orElseThrow { RuntimeException("Cannot retrieve authenticated user with email: $email") }
     }
 
 }

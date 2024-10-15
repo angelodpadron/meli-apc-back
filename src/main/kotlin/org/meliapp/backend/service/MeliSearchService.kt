@@ -1,6 +1,9 @@
 package org.meliapp.backend.service
 
 import org.meliapp.backend.dto.meli.MeliSearchResponse
+import org.meliapp.backend.dto.product.ProductResponse
+import org.meliapp.backend.exception.apc.ProductNotFoundException
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -11,12 +14,15 @@ class MeliSearchService(
     private val restClient: RestClient,
 ) {
 
+    @Value("\${app.meli.meli-site-id}")
+    lateinit var siteId: String
+
     fun findByKeyword(keyword: String, filters: Map<String, String>?): MeliSearchResponse {
 
         val queryString = (filters ?: emptyMap())
             .minus("keyword")
             .entries
-            .fold("/search?q=$keyword") { acc, entry ->
+            .fold("sites/$siteId/search?q=$keyword") { acc, entry ->
                 "$acc&${entry.key}=${entry.value}"
             }
 
@@ -30,6 +36,18 @@ class MeliSearchService(
 
     }
 
+    fun findById(id: String): ProductResponse {
+        val queryString = "/items/${id}"
+
+        return restClient
+            .get()
+            .uri(queryString)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus({ it.is4xxClientError }) { _, _ -> throw ProductNotFoundException(id) }
+            .body(object : ParameterizedTypeReference<ProductResponse>() {})!!
+
+    }
 
 
 }
