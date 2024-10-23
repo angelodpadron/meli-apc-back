@@ -2,9 +2,9 @@ name: SonarCloud Code Analysis
 
 on:
   push: 
-    branches: ["feature/*"]
+    branches: [ "feature/*" ]
   pull_request:
-    branches: ["develop, master"]
+    branches: [ "master", "develop" ]
 
 jobs:
   sonarcloud:
