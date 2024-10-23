@@ -1,11 +1,9 @@
 name: Build and Publish to Docker Hub
 
 on:
-  workflow_dispatch: # Allows manual trigger for testing
   push:
-    branch: ['setup']
-    # tags:
-      # - '*.*.*'
+    tags:
+      - '*.*.*'
 
 jobs:
   build:
@@ -28,5 +26,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          # tags: angelodpadron/meli-apc-back:latest, angelodpadron/meli-apc-back:${{ github.ref_name }}
-          tags: angelodpadron/meli-apc-back:publish-test
+          tags: angelodpadron/meli-apc-back:latest, angelodpadron/meli-apc-back:${{ github.ref_name }}
