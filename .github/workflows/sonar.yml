@@ -15,10 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Build and run tests with coverage
+        run: mvn clean verify
+
       - name: Set up SonarCloud
         uses: sonarsource/sonarcloud-github-action@v3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
         with:
           args: >
+            -Dsonar.projectKey=angelodpadron_meli-apc-back
+            -Dsonar.organization=angelodpadron
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
