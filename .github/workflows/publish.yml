@@ -2,7 +2,8 @@ name: Build and Publish to Docker Hub
 
 on:
   workflow_dispatch: # Allows manual trigger for testing
-  # push:
+  push:
+    branch: ['setup']
     # tags:
       # - '*.*.*'
 
