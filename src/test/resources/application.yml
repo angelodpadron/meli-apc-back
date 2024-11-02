@@ -13,10 +13,8 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-# TODO: configure rest client for tests
-
 app:
   meli:
-    base-url:
-    meli-site-id:
+    base-url: https://api.mercadolibre.com
+    meli-site-id: MLA
     access-token:

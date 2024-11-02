@@ -149,4 +149,20 @@ class AuthServiceUnitTest {
 
     }
 
+    @Test
+    fun `should return a jwt when login`() {
+        // Arrange
+        val request = AuthRequestBody("pepe@email.com", "password")
+        val mockUser = mock(User::class.java)
+
+        whenever(userRepository.findByEmail(request.email)).thenReturn(Optional.of(mockUser))
+        whenever(mockUser.email).thenReturn(request.email)
+        whenever(jwtHelper.generateToken(request.email)).thenReturn("JWT")
+
+        val result = authService.login(request)
+
+        assertEquals("JWT", result)
+
+    }
+
 }
