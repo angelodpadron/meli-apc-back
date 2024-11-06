@@ -47,17 +47,20 @@ class PurchaseServiceUnitTest {
     fun `can buy an existing product`() {
         val meliId = "MELI_ID"
         val productTitle = "TITLE"
+        val thumbnail = "THUMBNAIL"
         val product: Product = mock()
 
         whenever(product.meliId).thenReturn(meliId)
         whenever(product.price).thenReturn(BigDecimal.ZERO)
         whenever(product.title).thenReturn(productTitle)
+        whenever(product.thumbnail).thenReturn(thumbnail)
         whenever(productService.findByMeliId(meliId)).thenReturn(product)
 
         val result = purchaseService.buy(PurchaseRequest(meliId, 1))
 
         assertEquals(meliId, result.product.meliId)
         assertEquals(productTitle, result.product.title)
+        assertEquals(thumbnail, result.product.thumbnail)
         assertEquals(BigDecimal.ZERO, result.product.price)
         assertEquals(1, result.quantity)
         assertEquals(BigDecimal.ZERO, result.total)
