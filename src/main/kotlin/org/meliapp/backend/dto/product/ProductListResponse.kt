@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigDecimal
 
-data class ProductResponse @JsonCreator constructor(
+data class ProductListResponse @JsonCreator constructor(
     @JsonProperty("id")
     val id: String = "",
     @JsonProperty("title")

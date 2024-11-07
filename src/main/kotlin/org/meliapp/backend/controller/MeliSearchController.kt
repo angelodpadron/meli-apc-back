@@ -2,7 +2,7 @@ package org.meliapp.backend.controller
 
 import org.meliapp.backend.dto.ApiResponse
 import org.meliapp.backend.dto.meli.MeliSearchResponse
-import org.meliapp.backend.dto.product.ProductResponse
+import org.meliapp.backend.dto.product.ProductDetailsResponse
 import org.meliapp.backend.service.MeliSearchService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +17,7 @@ class MeliSearchController(private val meliSearchService: MeliSearchService) {
     }
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: String): ResponseEntity<ApiResponse<ProductResponse>> {
+    fun findById(@PathVariable id: String): ResponseEntity<ApiResponse<ProductDetailsResponse>> {
         return ResponseEntity.ok(ApiResponse(meliSearchService.findById(id)))
     }
 

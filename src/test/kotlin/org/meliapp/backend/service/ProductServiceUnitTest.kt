@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.meliapp.backend.dto.product.ProductResponse
+import org.meliapp.backend.dto.product.ProductDetailsResponse
 import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.meliapp.backend.model.Product
 import org.meliapp.backend.repository.ProductRepository
@@ -57,12 +57,14 @@ class ProductServiceUnitTest {
             this.meliId = meliId
         }
 
-        val productResponse = ProductResponse(
-            id = meliId,
+        val productResponse = ProductDetailsResponse(
+            meliId = meliId,
             thumbnail = product.thumbnail,
             price = product.price,
             title = product.title,
-            availableQuantity = 1
+            pictures = listOf(),
+            description = ""
+
         )
 
         whenever(productRepository.findByMeliId(any())).thenReturn(Optional.empty())
