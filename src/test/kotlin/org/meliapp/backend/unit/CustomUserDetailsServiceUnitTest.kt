@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -9,6 +9,7 @@ import org.meliapp.backend.model.Role
 import org.meliapp.backend.model.RoleName
 import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.UserRepository
+import org.meliapp.backend.service.CustomUserDetailsService
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock

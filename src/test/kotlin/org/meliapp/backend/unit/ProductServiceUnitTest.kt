@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -9,6 +9,8 @@ import org.meliapp.backend.dto.product.ProductDetailsResponse
 import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.meliapp.backend.model.Product
 import org.meliapp.backend.repository.ProductRepository
+import org.meliapp.backend.service.MeliSearchService
+import org.meliapp.backend.service.ProductService
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.kotlin.*

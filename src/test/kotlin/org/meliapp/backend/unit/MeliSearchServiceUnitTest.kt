@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.meliapp.backend.dto.meli.MeliSearchResponse
 import org.meliapp.backend.exception.apc.ProductNotFoundException
+import org.meliapp.backend.service.MeliSearchService
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest

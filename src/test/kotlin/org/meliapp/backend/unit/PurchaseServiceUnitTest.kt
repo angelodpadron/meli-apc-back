@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -9,6 +9,9 @@ import org.meliapp.backend.model.Product
 import org.meliapp.backend.model.Purchase
 import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.PurchaseRepository
+import org.meliapp.backend.service.AuthService
+import org.meliapp.backend.service.ProductService
+import org.meliapp.backend.service.PurchaseService
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.kotlin.*
