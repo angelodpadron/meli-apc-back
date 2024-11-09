@@ -6,29 +6,23 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.meliapp.backend.dto.bookmark.BookmarkRequestBody
-import org.meliapp.backend.dto.product.ProductResponse
 import org.meliapp.backend.exception.apc.BookmarkNotFoundException
 import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.meliapp.backend.model.Bookmark
 import org.meliapp.backend.model.Product
 import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.BookmarkRepository
-import org.meliapp.backend.repository.ProductRepository
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.kotlin.*
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.math.BigDecimal
 import java.util.*
-import org.mockito.Mockito.`when` as whenever
 
 
 @ExtendWith(SpringExtension::class)
 class BookmarkServiceUnitTest {
-
-    @Mock
-    private lateinit var meliSearchService: MeliSearchService
 
     @Mock
     private lateinit var authService: AuthService
@@ -37,7 +31,7 @@ class BookmarkServiceUnitTest {
     private lateinit var bookmarkRepository: BookmarkRepository
 
     @Mock
-    private lateinit var productRepository: ProductRepository
+    private lateinit var productService: ProductService
 
     @InjectMocks
     private lateinit var bookmarkService: BookmarkService
@@ -47,24 +41,15 @@ class BookmarkServiceUnitTest {
         // Arrange
         val bookmarkRequest = BookmarkRequestBody("meli_id", 5, "comment")
 
-        val productResponse = ProductResponse(
-            id = bookmarkRequest.meliId,
-            price = BigDecimal(1),
-            title = "product_title",
-            availableQuantity = 1,
-            thumbnail = "product_thumbnail",
-        )
-
-        val mockUser = mock(User::class.java)
-        val mockProduct = mock(Product::class.java)
+        val mockUser: User = mock()
+        val mockProduct: Product = mock()
 
         whenever(mockUser.id).thenReturn(1L)
         whenever(mockProduct.meliId).thenReturn("meli_id")
         whenever(mockProduct.title).thenReturn("product_title")
         whenever(mockProduct.thumbnail).thenReturn("product_thumbnail")
 
-        whenever(meliSearchService.findById(bookmarkRequest.meliId)).thenReturn(productResponse)
-        whenever(productRepository.findByMeliId(bookmarkRequest.meliId)).thenReturn(Optional.of(mockProduct))
+        whenever(productService.findByMeliId(bookmarkRequest.meliId)).thenReturn(mockProduct)
         whenever(authService.getUserAuthenticated()).thenReturn(mockUser)
 
         // Act
@@ -77,52 +62,18 @@ class BookmarkServiceUnitTest {
 
         // Verify
         verify(bookmarkRepository, times(1)).save(any())
-        verify(productRepository, times(0)).save(any())
 
-    }
-
-    @Test
-    fun `should not save an already persisted product`() {
-        // Arrange
-        val bookmarkRequest = BookmarkRequestBody("meli_id", 5, "comment")
-
-        val productResponse = ProductResponse(
-            id = bookmarkRequest.meliId,
-            price = BigDecimal(1),
-            title = "product_title",
-            availableQuantity = 1,
-            thumbnail = "product_thumbnail",
-        )
-
-        val mockUser = mock(User::class.java)
-        val mockProduct = mock(Product::class.java)
-
-        whenever(mockUser.id).thenReturn(1L)
-        whenever(mockProduct.meliId).thenReturn("meli_id")
-        whenever(mockProduct.title).thenReturn("product_title")
-        whenever(mockProduct.thumbnail).thenReturn("product_thumbnail")
-
-        whenever(meliSearchService.findById(bookmarkRequest.meliId)).thenReturn(productResponse)
-        whenever(productRepository.findByMeliId(bookmarkRequest.meliId)).thenReturn(Optional.empty())
-        whenever(productRepository.save(any())).thenReturn(mockProduct)
-        whenever(authService.getUserAuthenticated()).thenReturn(mockUser)
-
-        // Act
-        bookmarkService.bookmarkProduct(bookmarkRequest)
-
-        // Verify
-        verify(productRepository, times(1)).save(any())
     }
 
     @Test
     fun `should throw exception when bookmarking with wrong meli id`() {
         // Arrange
         val bookmarkRequest = BookmarkRequestBody("meli_id", 5, "comment")
-        val mockUser = mock(User::class.java)
+        val mockUser: User = mock()
 
         whenever(mockUser.id).thenReturn(1L)
-        whenever(meliSearchService.findById(bookmarkRequest.meliId)).thenThrow(ProductNotFoundException::class.java)
         whenever(authService.getUserAuthenticated()).thenReturn(mockUser)
+        whenever(productService.findByMeliId(anyString())).thenThrow(ProductNotFoundException::class.java)
 
         // Act and Assert
         assertThrows<ProductNotFoundException> { bookmarkService.bookmarkProduct(bookmarkRequest) }
@@ -131,7 +82,7 @@ class BookmarkServiceUnitTest {
     @Test
     fun `should return a list of bookmarks from user`() {
         // Arrange
-        val mockUser = mock(User::class.java)
+        val mockUser: User = mock()
         whenever(mockUser.id).thenReturn(1L)
         whenever(authService.getUserAuthenticated()).thenReturn(mockUser)
 
@@ -147,8 +98,8 @@ class BookmarkServiceUnitTest {
         // Arrange
         val bookmarkId = 1L
         val userId = 1L
-        val bookmark = mock(Bookmark::class.java)
-        val user = mock(User::class.java)
+        val bookmark: Bookmark = mock()
+        val user: User = mock()
 
         whenever(user.id).thenReturn(userId)
         whenever(authService.getUserAuthenticated()).thenReturn(user)
@@ -167,7 +118,7 @@ class BookmarkServiceUnitTest {
         // Arrange
         val bookmarkId = 1L
         val userId = 1L
-        val user = mock(User::class.java)
+        val user: User = mock()
 
         whenever(bookmarkRepository.findByIdAndUserId(userId, bookmarkId)).thenReturn(Optional.empty())
         whenever(user.id).thenReturn(userId)
@@ -181,8 +132,8 @@ class BookmarkServiceUnitTest {
     fun `should edit bookmark`() {
         // Arrange
         val request = BookmarkRequestBody("meli_id", 4, "updated comment")
-        val mockUser = mock(User::class.java)
-        val mockProduct = mock(Product::class.java)
+        val mockUser: User = mock()
+        val mockProduct: Product = mock()
 
         val bookmark = Bookmark().apply {
             id = 1L

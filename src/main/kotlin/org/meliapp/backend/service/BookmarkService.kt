@@ -6,17 +6,14 @@ import org.meliapp.backend.dto.bookmark.BookmarkRequestBody
 import org.meliapp.backend.dto.bookmark.BookmarkSummary
 import org.meliapp.backend.exception.apc.BookmarkNotFoundException
 import org.meliapp.backend.model.Bookmark
-import org.meliapp.backend.model.Product
 import org.meliapp.backend.repository.BookmarkRepository
-import org.meliapp.backend.repository.ProductRepository
 import org.springframework.stereotype.Service
 
 @Service
 class BookmarkService(
-    private val meliSearchService: MeliSearchService,
     private val authService: AuthService,
     private val bookmarkRepository: BookmarkRepository,
-    private val productRepository: ProductRepository,
+    private val productService: ProductService,
 ) {
 
     fun getUserBookmarks(): List<BookmarkSummary> {
@@ -47,18 +44,8 @@ class BookmarkService(
     @Transactional
     fun bookmarkProduct(request: BookmarkRequestBody): BookmarkDetails {
         val currentUser = authService.getUserAuthenticated()
-        val productResponse = meliSearchService.findById(request.meliId)
 
-        val savedProduct = productRepository
-            .findByMeliId(productResponse.id)
-            .orElseGet {
-                productRepository.save(Product().apply {
-                    meliId = productResponse.id
-                    title = productResponse.title
-                    thumbnail = productResponse.thumbnail
-                    price = productResponse.price
-                })
-            }
+        val savedProduct = productService.findByMeliId(request.meliId)
 
         val bookmark = Bookmark().apply {
             product = savedProduct

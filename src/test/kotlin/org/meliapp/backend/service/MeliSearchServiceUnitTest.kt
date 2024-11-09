@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.meliapp.backend.dto.meli.MeliSearchResponse
-import org.meliapp.backend.dto.product.ProductResponse
 import org.meliapp.backend.exception.apc.ProductNotFoundException
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,6 @@ import org.springframework.test.web.client.match.MockRestRequestMatchers.request
 import org.springframework.test.web.client.response.MockRestResponseCreators.withResourceNotFound
 import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import org.springframework.web.client.RestClient
-import java.math.BigDecimal
 import kotlin.test.assertEquals
 
 
@@ -75,21 +73,29 @@ class MeliSearchServiceUnitTest {
     fun `find by id should return a product response`() {
         val id = "MLA123"
         val expectedUri = "/items/$id"
-
-        val mockResponse = ProductResponse(id, "", BigDecimal.valueOf(0), "", 0)
+        val expectedDescriptionUri = "$expectedUri/description"
 
         server.expect(requestTo(expectedUri))
             .andExpect(method(HttpMethod.GET))
             .andRespond(
                 withSuccess(
-                    "{ \"id\": \"$id\", \"title\": \"\", \"price\": 0, \"thumbnail\": \"\", \"available_quantity\": 0 }",
+                    "{ \"id\": \"$id\", \"title\": \"\", \"price\": 0, \"thumbnail\": \"\", \"available_quantity\": 0, \"pictures\": [] }",
+                    MediaType.APPLICATION_JSON
+                )
+            )
+
+        server.expect(requestTo(expectedDescriptionUri))
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(
+                withSuccess(
+                    "{ \"plain_text\": \"description\"}",
                     MediaType.APPLICATION_JSON
                 )
             )
 
         val response = meliSearchService.findById(id)
 
-        assertEquals(mockResponse, response)
+        assertEquals(id, response.meliId)
     }
 
     @Test
