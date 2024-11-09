@@ -55,6 +55,7 @@ class PurchaseServiceUnitTest {
         whenever(product.title).thenReturn(productTitle)
         whenever(product.thumbnail).thenReturn(thumbnail)
         whenever(productService.findByMeliId(meliId)).thenReturn(product)
+        whenever(purchaseRepository.save(any<Purchase>())).thenAnswer { it.getArgument<Purchase>(0) }
 
         val result = purchaseService.buy(PurchaseRequest(meliId, 1))
 

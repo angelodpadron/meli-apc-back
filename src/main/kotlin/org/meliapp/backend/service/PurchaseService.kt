@@ -16,44 +16,39 @@ class PurchaseService(
     private val productService: ProductService
 ) {
 
-    fun buy(purchaseRequest: PurchaseRequest): PurchaseResponse {
-        val user = authService.getUserAuthenticated()
-        val product = productService.findByMeliId(purchaseRequest.meliId)
+    fun buy(purchaseRequest: PurchaseRequest): PurchaseResponse =
+        toPurchaseResponse(
+            purchaseRepository.save(
+                Purchase().apply {
+                    this.user = authService.getUserAuthenticated()
+                    this.product = productService.findByMeliId(purchaseRequest.meliId)
+                    quantity = purchaseRequest.quantity
+                    totalPrice = product.price * BigDecimal(quantity)
+                }
+            )
+        )
 
-        val purchase = Purchase()
-        purchase.user = user
-        purchase.quantity = purchaseRequest.quantity
-        purchase.product = product
-        purchase.totalPrice = product.price * BigDecimal(purchaseRequest.quantity)
+    fun purchases(): List<PurchaseResponse> =
+        purchaseRepository
+            .findByUserId(authService.getUserAuthenticated().id)
+            .map { toPurchaseResponse(it) }
 
-        purchaseRepository.save(purchase)
-
-        return toPurchaseResponse(purchase)
-
-    }
-
-    fun purchases(): List<PurchaseResponse> {
-        val user = authService.getUserAuthenticated()
-        return purchaseRepository.findByUserId(user.id).map { toPurchaseResponse(it) }
-    }
-
-    private fun toPurchaseResponse(purchase: Purchase): PurchaseResponse {
-        return PurchaseResponse(
+    private fun toPurchaseResponse(purchase: Purchase): PurchaseResponse =
+        PurchaseResponse(
             purchase.id,
             purchase.quantity,
             toProductPurchaseResponse(purchase.product),
             purchase.purchaseDate,
             purchase.totalPrice
         )
-    }
 
-    private fun toProductPurchaseResponse(product: Product): ProductPurchaseResponse {
-        return ProductPurchaseResponse(
+    private fun toProductPurchaseResponse(product: Product): ProductPurchaseResponse =
+        ProductPurchaseResponse(
             product.meliId,
             product.title,
             product.thumbnail,
-            product.price)
-    }
+            product.price
+        )
 
 
 }

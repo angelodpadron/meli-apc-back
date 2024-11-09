@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 
 @Entity
 class Purchase {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0

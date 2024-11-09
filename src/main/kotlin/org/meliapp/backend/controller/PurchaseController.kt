@@ -14,13 +14,13 @@ class PurchaseController(
 ) {
 
     @PostMapping
-    fun buy(@RequestBody purchaseRequest: PurchaseRequest): ResponseEntity<ApiResponse<PurchaseResponse>> {
-        return ResponseEntity.ok(ApiResponse(purchaseService.buy(purchaseRequest)))
-    }
+    fun buy(@RequestBody purchaseRequest: PurchaseRequest): ResponseEntity<ApiResponse<PurchaseResponse>> =
+        ResponseEntity.ok(ApiResponse(purchaseService.buy(purchaseRequest)))
+
 
     @GetMapping
-    fun purchases(): ResponseEntity<ApiResponse<List<PurchaseResponse>>> {
-        return ResponseEntity.ok(ApiResponse(purchaseService.purchases()))
-    }
+    fun purchases(): ResponseEntity<ApiResponse<List<PurchaseResponse>>> =
+        ResponseEntity.ok(ApiResponse(purchaseService.purchases()))
+
 
 }
