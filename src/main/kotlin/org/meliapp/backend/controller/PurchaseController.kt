@@ -4,6 +4,7 @@ import org.meliapp.backend.dto.ApiResponse
 import org.meliapp.backend.dto.purchase.PurchaseRequest
 import org.meliapp.backend.dto.purchase.PurchaseResponse
 import org.meliapp.backend.service.PurchaseService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -15,7 +16,9 @@ class PurchaseController(
 
     @PostMapping
     fun buy(@RequestBody purchaseRequest: PurchaseRequest): ResponseEntity<ApiResponse<PurchaseResponse>> =
-        ResponseEntity.ok(ApiResponse(purchaseService.buy(purchaseRequest)))
+        ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(ApiResponse(purchaseService.buy(purchaseRequest)))
 
 
     @GetMapping
