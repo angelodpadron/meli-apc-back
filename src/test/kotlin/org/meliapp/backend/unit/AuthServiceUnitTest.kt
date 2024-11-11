@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -10,6 +10,7 @@ import org.meliapp.backend.model.RoleName
 import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.RoleRepository
 import org.meliapp.backend.repository.UserRepository
+import org.meliapp.backend.service.AuthService
 import org.mockito.ArgumentCaptor
 import org.mockito.InjectMocks
 import org.mockito.Mock

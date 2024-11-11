@@ -1,4 +1,4 @@
-package org.meliapp.backend.service
+package org.meliapp.backend.unit
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,6 +12,9 @@ import org.meliapp.backend.model.Bookmark
 import org.meliapp.backend.model.Product
 import org.meliapp.backend.model.User
 import org.meliapp.backend.repository.BookmarkRepository
+import org.meliapp.backend.service.AuthService
+import org.meliapp.backend.service.BookmarkService
+import org.meliapp.backend.service.ProductService
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
