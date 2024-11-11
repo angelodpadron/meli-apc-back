@@ -1,10 +1,20 @@
 spring:
   profiles:
     active: test
-
-# TODO: configure rest client for tests
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      platform: h2
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 
 app:
   meli:
-    base-url:
+    base-url: https://api.mercadolibre.com
+    meli-site-id: MLA
     access-token:

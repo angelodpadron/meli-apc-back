@@ -9,21 +9,29 @@ services:
     networks:
       - meli-apc-network
     environment:
+      # DB parameters
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/apc
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: dev
+      # Swagger related config
       APP_BASE_URL: ${APP_BASE_URL}
+      # Meli parameters
       MELI_SITE_ID: ${MELI_SITE_ID}
       MELI_ACCESS_TOKEN: ${MELI_ACCESS_TOKEN}
 
   postgres:
     image: postgres
     environment:
-      POSTGRES_USER: meliapc
-      POSTGRES_PASSWORD: meliapc
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: apc
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - meli-apc-network
-    restart: unless-stopped
+    restart: always
 
   pgadmin:
     container_name: ms_pgadmin
@@ -35,7 +43,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - 5050:50
+      - "5050:50"
     networks:
       - meli-apc-network
     restart: unless-stopped
@@ -45,5 +53,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
+  postgres_data:
   pgadmin:

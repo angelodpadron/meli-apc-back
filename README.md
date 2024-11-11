@@ -1,5 +1,11 @@
 # Meli APC
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=angelodpadron_meli-apc-back&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=angelodpadron_meli-apc-back)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=angelodpadron_meli-apc-back&metric=coverage)](https://sonarcloud.io/summary/new_code?id=angelodpadron_meli-apc-back)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=angelodpadron_meli-apc-back&metric=bugs)](https://sonarcloud.io/summary/new_code?id=angelodpadron_meli-apc-back)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=angelodpadron_meli-apc-back&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=angelodpadron_meli-apc-back)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=angelodpadron_meli-apc-back&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=angelodpadron_meli-apc-back)
+
 ## Overview
 Este repositorio contiene el backend de Meli APC, Asesor Personal de Compras.
 
