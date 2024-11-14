@@ -18,3 +18,7 @@ app:
     base-url: https://api.mercadolibre.com
     meli-site-id: MLA
     access-token:
+  apc:
+    admin:
+      email:
+      password:

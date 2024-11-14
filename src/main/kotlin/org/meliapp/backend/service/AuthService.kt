@@ -30,7 +30,7 @@ class AuthService(
 
         authenticate(registerRequest)
 
-        return jwtHelper.generateToken(user.email)
+        return jwtHelper.generateToken(user)
     }
 
     fun generateUser(registerRequest: AuthRequestBody): User {
@@ -50,7 +50,7 @@ class AuthService(
 
         return userRepository
             .findByEmail(request.email)
-            .map { user -> jwtHelper.generateToken(user.email) }
+            .map { user -> jwtHelper.generateToken(user) }
             .get()
     }
 

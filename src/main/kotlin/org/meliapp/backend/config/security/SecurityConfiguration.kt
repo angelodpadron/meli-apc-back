@@ -40,6 +40,16 @@ class SecurityConfiguration(
 
     @Bean
     fun configureFilterChain(http: HttpSecurity, authenticationManager: AuthenticationManager): SecurityFilterChain {
+
+        val userEndpoints = arrayOf(
+            "api/purchases/**",
+            "api/bookmarks/**"
+        )
+
+        val adminEndpoints = arrayOf(
+            "api/admin/**"
+        )
+
         return http
             .cors { cors ->
                 cors.configurationSource {
@@ -56,14 +66,14 @@ class SecurityConfiguration(
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers(
-                        "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/v3/api-docs/swagger-config",
-                        "/v3/api-docs"
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
                     ).permitAll()
                     .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers(HttpMethod.GET, "api/products/**").permitAll()
+                    .requestMatchers(*userEndpoints).hasRole("USER")
+                    .requestMatchers(*adminEndpoints).hasRole("ADMIN")
 
             }
             .authenticationManager(authenticationManager)
@@ -73,7 +83,10 @@ class SecurityConfiguration(
     }
 
     @Bean
-    fun authenticationManager(http: HttpSecurity, customUserDetailsService: CustomUserDetailsService): AuthenticationManager {
+    fun authenticationManager(
+        http: HttpSecurity,
+        customUserDetailsService: CustomUserDetailsService
+    ): AuthenticationManager {
         val authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
 
         authenticationManagerBuilder
