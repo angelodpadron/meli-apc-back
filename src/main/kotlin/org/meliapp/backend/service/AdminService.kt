@@ -26,9 +26,9 @@ class AdminService(
         bookmarkRepository.getMostBookmarked(pageRequest)
 
     fun top5MostSold(): List<ProductSaleCount> =
-        purchaseRepository.getTop5MostSold(pageRequest)
+        purchaseRepository.getMostSold(pageRequest)
 
     fun top5Buyers(): List<UserPurchaseCount> =
-        purchaseRepository.getTop5Purchasers(pageRequest)
+        purchaseRepository.getTopBuyers(pageRequest)
 
 }

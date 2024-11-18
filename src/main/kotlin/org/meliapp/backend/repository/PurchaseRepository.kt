@@ -17,7 +17,7 @@ interface PurchaseRepository : JpaRepository<Purchase, Long> {
         GROUP BY p.meliId, p.title 
         ORDER BY SUM(pr.quantity) DESC
     """)
-    fun getTop5MostSold(pageable: Pageable): List<ProductSaleCount>
+    fun getMostSold(pageable: Pageable): List<ProductSaleCount>
 
     @Query("""
         SELECT new org.meliapp.backend.dto.management.top.UserPurchaseCount(u.email, SUM(p.totalPrice), SUM(p.quantity))
@@ -25,5 +25,5 @@ interface PurchaseRepository : JpaRepository<Purchase, Long> {
         GROUP BY u.email
         ORDER BY COUNT(p) DESC
     """)
-    fun getTop5Purchasers(pageable: Pageable): List<UserPurchaseCount>
+    fun getTopBuyers(pageable: Pageable): List<UserPurchaseCount>
 }
