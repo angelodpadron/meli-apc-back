@@ -20,5 +20,5 @@ app:
     access-token:
   apc:
     admin:
-      email:
-      password:
+      email: admin@test.com
+      password: password
