@@ -58,8 +58,8 @@ class AdminIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun `should get top five buyers and a 200 status code`() {
-        makeAuthGetRequest("/api/admin/top-five-sold")
+    fun `should get top five purchasers and a 200 status code`() {
+        makeAuthGetRequest("/api/admin/top-five-purchasers")
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.payload").exists())
     }
