@@ -44,6 +44,13 @@ class AdminIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun `should get all bookmarked products and a 200 status code`() {
+        makeAuthGetRequest("/api/admin/bookmarked-products")
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.payload").exists())
+    }
+
+    @Test
     fun `should get top five most bookmarked products and a 200 status code`() {
         makeAuthGetRequest("/api/admin/top-five-bookmarked")
             .andExpect(status().isOk)

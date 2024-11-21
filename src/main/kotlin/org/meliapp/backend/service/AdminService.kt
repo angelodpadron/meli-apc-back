@@ -1,5 +1,6 @@
 package org.meliapp.backend.service
 
+import org.meliapp.backend.dto.management.BookmarkBasicResume
 import org.meliapp.backend.dto.management.UserBasicResume
 import org.meliapp.backend.dto.management.top.ProductBookmarkCount
 import org.meliapp.backend.dto.management.top.ProductSaleCount
@@ -31,4 +32,6 @@ class AdminService(
     fun top5Buyers(): List<UserPurchaseCount> =
         purchaseRepository.getTopBuyers(pageRequest)
 
+    fun getBookmarkedProducts(): List<BookmarkBasicResume> =
+        bookmarkRepository.getBookmarksBasicResume()
 }
