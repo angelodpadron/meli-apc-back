@@ -1,6 +1,8 @@
 package org.meliapp.backend.model
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
@@ -13,5 +15,8 @@ class User {
     lateinit var password: String
     @ManyToMany(fetch = FetchType.EAGER)
     lateinit var roles: Collection<Role>
+    @CreationTimestamp
+    lateinit var createdAt: LocalDateTime
+
 
 }
