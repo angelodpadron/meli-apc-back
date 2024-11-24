@@ -13,7 +13,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun existsByEmail(email: String): Boolean
 
     @Query("""
-        SELECT new org.meliapp.backend.dto.management.UserBasicResume(u.email, u.createdAt)
+        SELECT new org.meliapp.backend.dto.management.UserBasicResume(u.id, u.email, u.createdAt)
         FROM User u INNER JOIN u.roles r 
         WHERE r.name = 'ROLE_USER'
     """)

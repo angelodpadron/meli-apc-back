@@ -1,6 +1,5 @@
 package org.meliapp.backend.repository
 
-import org.meliapp.backend.dto.management.BookmarkBasicResume
 import org.meliapp.backend.dto.management.top.ProductBookmarkCount
 import org.meliapp.backend.model.Bookmark
 import org.springframework.data.domain.Pageable
@@ -26,10 +25,10 @@ interface BookmarkRepository : JpaRepository<Bookmark, Long> {
     fun getMostBookmarked(pageable: Pageable): List<ProductBookmarkCount>
 
     @Query("""
-        SELECT new org.meliapp.backend.dto.management.BookmarkBasicResume(p.meliId, p.title, COUNT(p))
+        SELECT new org.meliapp.backend.dto.management.top.ProductBookmarkCount(p.meliId, p.title, COUNT(p))
         FROM Bookmark b JOIN b.product p
         GROUP BY p.meliId, p.title
         ORDER BY p.title DESC  
     """)
-    fun getBookmarksBasicResume(): List<BookmarkBasicResume>
+    fun getBookmarksBasicResume(): List<ProductBookmarkCount>
 }

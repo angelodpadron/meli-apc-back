@@ -1,7 +1,6 @@
 package org.meliapp.backend.controller
 
 import org.meliapp.backend.dto.ApiResponse
-import org.meliapp.backend.dto.management.BookmarkBasicResume
 import org.meliapp.backend.dto.management.UserBasicResume
 import org.meliapp.backend.dto.management.top.ProductBookmarkCount
 import org.meliapp.backend.dto.management.top.ProductSaleCount
@@ -23,7 +22,7 @@ class AdminController(
         ResponseEntity.ok(ApiResponse(adminService.getRegisteredUsers()))
 
     @GetMapping("/bookmarked-products")
-    fun getBookmarkedProducts(): ResponseEntity<ApiResponse<List<BookmarkBasicResume>>> =
+    fun getBookmarkedProducts(): ResponseEntity<ApiResponse<List<ProductBookmarkCount>>> =
         ResponseEntity.ok(ApiResponse(adminService.getBookmarkedProducts()))
 
     @GetMapping("/top-five-bookmarked")
