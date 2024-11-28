@@ -20,3 +20,7 @@ app:
     base-url: https://api.mercadolibre.com
     meli-site-id: ${MELI_SITE_ID}
     access-token: ${MELI_ACCESS_TOKEN}
+  apc:
+    admin:
+      email: ${ADMIN_EMAIL}
+      password: ${ADMIN_PASSWORD}

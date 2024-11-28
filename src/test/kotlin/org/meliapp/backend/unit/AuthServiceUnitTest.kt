@@ -14,8 +14,11 @@ import org.meliapp.backend.service.AuthService
 import org.mockito.ArgumentCaptor
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -25,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 import kotlin.test.assertEquals
-import org.mockito.Mockito.`when` as whenever
 
 
 @ExtendWith(MockitoExtension::class)
@@ -91,9 +93,9 @@ class AuthServiceUnitTest {
         val email = "pepe@email.com"
         val password = "password"
         val authenticationToken = UsernamePasswordAuthenticationToken(email, password)
-        val mockAuthentication = mock(Authentication::class.java)
+        val mockAuthentication = mock<Authentication>()
 
-        whenever(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken::class.java))).thenReturn(
+        whenever(authenticationManager.authenticate(any<UsernamePasswordAuthenticationToken>())).thenReturn(
             mockAuthentication
         )
 
@@ -119,7 +121,7 @@ class AuthServiceUnitTest {
 
         whenever(passwordEncoder.encode(any())).thenReturn(mockEncodedPassword)
         whenever(roleRepository.findRoleByName(RoleName.ROLE_USER)).thenReturn(Optional.of(userRole))
-        whenever(jwtHelper.generateToken(request.email)).thenReturn(mockToken)
+        whenever(jwtHelper.generateToken(any())).thenReturn(mockToken)
 
         // Act
         val token = authService.register(request)
@@ -141,7 +143,7 @@ class AuthServiceUnitTest {
         // Arrange
         val request = AuthRequestBody("pepe@email.com", "password")
 
-        whenever(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken::class.java))).thenThrow(
+        whenever(authenticationManager.authenticate(any<UsernamePasswordAuthenticationToken>())).thenThrow(
             BadCredentialsException("")
         )
 
@@ -154,11 +156,10 @@ class AuthServiceUnitTest {
     fun `should return a jwt when login`() {
         // Arrange
         val request = AuthRequestBody("pepe@email.com", "password")
-        val mockUser = mock(User::class.java)
+        val mockUser = mock<User>()
 
         whenever(userRepository.findByEmail(request.email)).thenReturn(Optional.of(mockUser))
-        whenever(mockUser.email).thenReturn(request.email)
-        whenever(jwtHelper.generateToken(request.email)).thenReturn("JWT")
+        whenever(jwtHelper.generateToken(mockUser)).thenReturn("JWT")
 
         val result = authService.login(request)
 

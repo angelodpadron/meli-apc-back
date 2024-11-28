@@ -30,7 +30,7 @@ class CustomUserDetailsService(private val userRepository: UserRepository) : Use
     private fun mapRolesToAuthorities(roles: Collection<Role>): Collection<GrantedAuthority> {
         return roles
             .stream()
-            .map { SimpleGrantedAuthority(it.name.toString()) }
+            .map { SimpleGrantedAuthority(it.name.name) }
             .collect(Collectors.toList())
     }
 }
