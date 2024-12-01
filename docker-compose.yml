@@ -48,6 +48,8 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - meli-apc
     ports:
