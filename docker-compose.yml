@@ -10,7 +10,7 @@ services:
       - meli-apc-network
     environment:
       # DB parameters
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/apc
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: dev
       SPRING_DATASOURCE_PASSWORD: dev
       # Swagger related config
@@ -18,13 +18,25 @@ services:
       # Meli parameters
       MELI_SITE_ID: ${MELI_SITE_ID}
       MELI_ACCESS_TOKEN: ${MELI_ACCESS_TOKEN}
+      # Admin parameters
+      APP_APC_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      APP_APC_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+  front:
+    image: angelodpadron/meli-apc-front:latest
+    container_name: front
+    ports:
+      - "80:80"
+    networks:
+      - meli-apc-network
 
   postgres:
     image: postgres
+    container_name: postgres
     environment:
-      POSTGRES_DB: apc
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -33,20 +45,28 @@ services:
       - meli-apc-network
     restart: always
 
-  pgadmin:
-    container_name: ms_pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - meli-apc
     ports:
-      - "5050:50"
-    networks:
-      - meli-apc-network
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
     restart: unless-stopped
+    volumes:
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
 
 networks:
   meli-apc-network:
