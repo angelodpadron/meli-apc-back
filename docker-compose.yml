@@ -11,8 +11,8 @@ services:
     environment:
       # DB parameters
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: dev
-      SPRING_DATASOURCE_PASSWORD: dev
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       # Swagger related config
       APP_BASE_URL: ${APP_BASE_URL}
       # Meli parameters
