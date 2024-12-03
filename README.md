@@ -79,7 +79,7 @@ Configurar las siguientes variables de entorno antes de ejecutar el proyecto:
 ## 🧪 Tests
 Es posible ejecutar los tests del proyecto utilizando el siguiente comando:
 ```bash
-     ./mvnw test
+./mvnw test
   ```
 
 ## 🛡 Disclaimer
