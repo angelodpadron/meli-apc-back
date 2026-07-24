@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.17.2</version> <!-- Ensure version compatibility with jjwt-jackson -->
+            <version>2.18.9</version> <!-- Ensure version compatibility with jjwt-jackson -->
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
